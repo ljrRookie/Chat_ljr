@@ -113,7 +113,6 @@ public abstract class BaseFragment extends Fragment {
     }
     /**
      * 设置占位布局
-     *
      * @param placeHolderView 继承了占位布局规范的View
      */
     public void setPlaceHolderView(PlaceHolderView placeHolderView) {

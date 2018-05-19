@@ -1,6 +1,6 @@
 package com.ljr.factory.presenter.account;
 
-import com.ljr.common.factory.BaseContract;
+import com.ljr.common.factory.presenter.BaseContract;
 
 /**
  * Created by 林佳荣 on 2018/4/23.

@@ -3,11 +3,12 @@ package com.ljr.factory.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ljr.factory.Factory;
-import com.ljr.factory.presenter.model.api.account.AccountRspModel;
-import com.ljr.factory.presenter.model.db.User;
-import com.ljr.factory.presenter.model.db.User_Table;
+import com.ljr.factory.model.api.account.AccountRspModel;
+import com.ljr.factory.model.db.User;
+import com.ljr.factory.model.db.User_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 /**
@@ -88,6 +89,7 @@ public class Account {
      */
     public static boolean isLogin() {
         // 用户Id 和 Token 不为空
+        Log.e("调试","isLogin: "+userId+" "+token);
         return !TextUtils.isEmpty(userId)
                 && !TextUtils.isEmpty(token);
     }
@@ -100,6 +102,7 @@ public class Account {
         // 首先保证登录成功
         if (isLogin()) {
             User self = getUser();
+            Log.e("调试","isComplete: "+self.toString());
             return !TextUtils.isEmpty(self.getDesc())
                     && !TextUtils.isEmpty(self.getPortrait())
                     && self.getSex() != 0;
@@ -145,6 +148,7 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+
     }
     /**
      * 返回用户Id

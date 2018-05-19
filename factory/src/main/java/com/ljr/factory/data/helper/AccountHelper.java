@@ -1,24 +1,27 @@
 package com.ljr.factory.data.helper;
 
-import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.ljr.common.factory.data.DataSource;
 import com.ljr.factory.Factory;
+
 import com.ljr.factory.R;
+import com.ljr.factory.model.db.User;
+import com.ljr.factory.model.db.User_Table;
 import com.ljr.factory.net.NetWork;
 import com.ljr.factory.net.RemoteService;
 import com.ljr.factory.persistence.Account;
-import com.ljr.factory.presenter.model.api.RspModel;
-import com.ljr.factory.presenter.model.api.account.AccountRspModel;
-import com.ljr.factory.presenter.model.api.account.LoginModel;
-import com.ljr.factory.presenter.model.api.account.RegisterModel;
-import com.ljr.factory.presenter.model.db.User;
-import com.ljr.factory.presenter.model.db.model.AppDatabase;
-import com.raizlabs.android.dbflow.config.DatabaseDefinition;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
-import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.ljr.factory.model.api.RspModel;
+import com.ljr.factory.model.api.account.AccountRspModel;
+import com.ljr.factory.model.api.account.LoginModel;
+import com.ljr.factory.model.api.account.RegisterModel;
+import com.raizlabs.android.dbflow.sql.language.CursorResult;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +46,7 @@ public class AccountHelper {
         //异步请求
         call.enqueue(new AccountRspCallback(callback));
 
+
     }
     /**
      * 登录的调用
@@ -57,6 +61,7 @@ public class AccountHelper {
         Call<RspModel<AccountRspModel>> call = service.accountLogin(model);
         // 异步的请求
         call.enqueue(new AccountRspCallback(callback));
+
     }
     /**
      * 对设备Id进行绑定的操作

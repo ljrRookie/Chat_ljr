@@ -4,12 +4,13 @@ import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.ljr.common.Common;
-import com.ljr.common.factory.BasePresenter;
+import com.ljr.common.factory.presenter.BasePresenter;
 import com.ljr.common.factory.data.DataSource;
 import com.ljr.factory.R;
 import com.ljr.factory.data.helper.AccountHelper;
-import com.ljr.factory.presenter.model.api.account.RegisterModel;
-import com.ljr.factory.presenter.model.db.User;
+import com.ljr.factory.model.api.account.RegisterModel;
+import com.ljr.factory.model.db.User;
+import com.ljr.factory.persistence.Account;
 
 import net.qiujuer.genius.kit.handler.Run;
 import net.qiujuer.genius.kit.handler.runable.Action;
@@ -45,10 +46,10 @@ public class RegisterPresenter extends BasePresenter<RegisterContract.View> impl
         } else {
             // 进行网络请求
             // 构造Model，进行请求调用
-            RegisterModel model = new RegisterModel(phone, password, name, "");
+            RegisterModel model = new RegisterModel(phone, password, name, Account.getPushId());
             // 进行网络请求，并设置回送接口为自己
-            view.registerSuccess();
-          //  AccountHelper.register(model, this);
+
+            AccountHelper.register(model, this);
         }
 
     }

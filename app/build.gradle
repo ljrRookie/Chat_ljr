@@ -41,8 +41,11 @@ dependencies {
     compile "net.qiujuer.genius:res:$rootProject.ext.geniusVersion"
     compile "de.hdodenhof:circleimageview:$rootProject.ext.circleimageviewVersion"
     compile "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    compile "com.yalantis:ucrop:$rootProject.ext.ucropVersion"
+    compile "pub.devrel:easypermissions:$rootProject.ext.easyPMVersion"
     // 个推
     compile "com.getui:sdk:$rootProject.ext.getuiVersion"
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':factory')
 }

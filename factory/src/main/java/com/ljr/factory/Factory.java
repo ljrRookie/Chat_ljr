@@ -1,7 +1,6 @@
 package com.ljr.factory;
 
 import android.app.Application;
-import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
@@ -9,11 +8,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ljr.common.app.BaseApplication;
 import com.ljr.common.factory.data.DataSource;
+import com.ljr.factory.data.group.GroupCenter;
+import com.ljr.factory.data.group.GroupDispatcher;
+import com.ljr.factory.data.message.MessageCenter;
+import com.ljr.factory.data.message.MessageDispatcher;
+import com.ljr.factory.data.user.UserCenter;
+import com.ljr.factory.data.user.UserDispatcher;
 import com.ljr.factory.persistence.Account;
-import com.ljr.factory.presenter.model.api.PushModel;
-import com.ljr.factory.presenter.model.api.RspModel;
-import com.ljr.factory.presenter.model.api.account.AccountRspModel;
-import com.ljr.factory.presenter.model.db.User;
+import com.ljr.factory.model.api.PushModel;
+import com.ljr.factory.model.api.RspModel;
+import com.ljr.factory.model.api.account.AccountRspModel;
 import com.ljr.factory.utils.DBFlowExclusionStrategy;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -40,6 +44,8 @@ public class Factory {
         instance = new Factory();
     }
 
+    private static UserCenter sUserCard;
+
     private Factory() {
         // 新建一个4个线程的线程池
         executor = Executors.newFixedThreadPool(4);
@@ -56,6 +62,16 @@ public class Factory {
     }
 
     /**
+     * 异步运行的方法
+     *
+     * @param runnable Runnable
+     */
+    public static void runOnAsync(Runnable runnable) {
+        // 拿到单例，拿到线程池，然后异步执行
+        instance.executor.execute(runnable);
+    }
+
+    /**
      * 处理推送来的消息
      *
      * @param message 消息
@@ -68,9 +84,9 @@ public class Factory {
         if (model == null)
             return;
         //对推送集合进行遍历
-        for (PushModel.Entity entity: model.getEntities()){
+        for (PushModel.Entity entity : model.getEntities()) {
             Log.e(TAG, "dispatchPush-Entity:" + entity.toString());
-            switch (entity.type){
+            switch (entity.type) {
                 case PushModel.ENTITY_TYPE_LOGOUT:
                     instance.logout();
                     // 退出情况下，直接返回，并且不可继续
@@ -84,17 +100,45 @@ public class Factory {
             }
         }
     }
+
+    /**
+     * 获取一个用户中心的实现类
+     *
+     * @return
+     */
+    public static UserCenter getUserCenter() {
+        return UserDispatcher.instance();
+    }
+
+    /**
+     * 获取一个消息中心的实现类
+     *
+     * @return
+     */
+    public static MessageCenter getMessageCenter() {
+        return MessageDispatcher.instance();
+    }
+    /**
+     * 获取一个群处理中心的实现类
+     *
+     * @return
+     */
+    public static GroupCenter getGroupCenter() {
+        return GroupDispatcher.instance();
+    }
+
     /**
      * 收到账户退出的消息需要进行账户退出重新登录
      */
     private void logout() {
 
     }
+
     public static Gson getGson() {
         return instance.gson;
     }
 
-    public static void decodeRspCode(RspModel<AccountRspModel> model, DataSource.FailedCallback callback) {
+    public static void decodeRspCode(RspModel model, DataSource.FailedCallback callback) {
         if (model == null)
             return;
 
@@ -151,6 +195,7 @@ public class Factory {
                 break;
         }
     }
+
     private static void decodeRspCode(@StringRes final int resId,
                                       final DataSource.FailedCallback callback) {
         if (callback != null)

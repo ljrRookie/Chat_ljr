@@ -1,5 +1,6 @@
 package com.ljr.common.recycler;
 
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.ljr.common.R;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -47,10 +49,38 @@ public abstract class RecyclerAdapter<Data>
         // 当Cell长按时触发
         void onItemLongClick(RecyclerAdapter.ViewHolder holder, Data data);
     }
-    protected RecyclerAdapter(List<Data> dataList) {
-        mDataList = dataList;
+    /**
+     * 构造函数模块
+     */
+    public RecyclerAdapter() {
+        this(null);
     }
-
+    public RecyclerAdapter(AdapterListener<Data> listener) {
+        this(new ArrayList<Data>(), listener);
+    }
+    public RecyclerAdapter(List<Data> dataList, AdapterListener<Data> listener) {
+        this.mDataList = dataList;
+        this.mListener = listener;
+    }
+    /**
+     * 复写默认的布局类型返回
+     *
+     * @param position 坐标
+     * @return 类型，其实复写后返回的都是XML文件的ID
+     */
+    @Override
+    public int getItemViewType(int position) {
+        return getItemViewType(position, mDataList.get(position));
+    }
+    /**
+     * 得到布局的类型
+     *
+     * @param position 坐标
+     * @param data     当前的数据
+     * @return XML文件的ID，用于创建ViewHolder
+     */
+    @LayoutRes
+    protected abstract int getItemViewType(int position, Data data);
     /**
      * 创建一个ViewHolder
      *
@@ -201,7 +231,7 @@ public abstract class RecyclerAdapter<Data>
     public void update(Data data, ViewHolder<Data> holder) {
     //得到当前ViewHolder的坐标
         int pos = holder.getAdapterPosition();
-        if(pos>0){
+        if(pos>=0){
             //进行数据的移除和更新
             mDataList.remove(pos);
             mDataList.add(pos, data);
@@ -216,6 +246,7 @@ public abstract class RecyclerAdapter<Data>
      * @param <Data> 泛型
      */
     public static abstract class ViewHolder<Data> extends RecyclerView.ViewHolder {
+
         private Unbinder unbinder;
         protected Data mData;
         private AdapterCallback<Data> callback;
@@ -267,6 +298,23 @@ public abstract class RecyclerAdapter<Data>
             public void onItemLongClick(ViewHolder holder, Data data) {
 
             }
+        }
+    }
+    /**
+     * 对回调接口做一次实现AdapterListener
+     *
+     * @param <Data>
+     */
+    public static abstract class AdapterListenerImpl<Data> implements AdapterListener<Data> {
+
+        @Override
+        public void onItemClick(ViewHolder holder, Data data) {
+
+        }
+
+        @Override
+        public void onItemLongClick(ViewHolder holder, Data data) {
+
         }
     }
 }

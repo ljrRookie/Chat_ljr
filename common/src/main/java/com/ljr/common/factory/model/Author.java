@@ -6,7 +6,7 @@ package com.ljr.common.factory.model;
  * Function ：基础用户接口
  */
 
-public interface Author {
+public interface  Author {
     String getId();
 
     void setId(String id);

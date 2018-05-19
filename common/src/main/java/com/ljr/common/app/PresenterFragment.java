@@ -3,8 +3,7 @@ package com.ljr.common.app;
 import android.content.Context;
 import android.support.annotation.StringRes;
 
-import com.ljr.common.R;
-import com.ljr.common.factory.BaseContract;
+import com.ljr.common.factory.presenter.BaseContract;
 
 /**
  * Created by 林佳荣 on 2018/4/23.

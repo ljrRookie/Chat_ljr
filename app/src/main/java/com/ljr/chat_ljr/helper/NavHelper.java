@@ -24,6 +24,7 @@ public class NavHelper<T> {
 
     // 当前的一个选中的Tab
     private Tab<T> currentTab;
+
     public NavHelper(Context context, int containerId,
                      FragmentManager fragmentManager,
                      OnTabChangedListener<T> listener) {

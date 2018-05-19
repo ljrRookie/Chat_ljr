@@ -1,16 +1,16 @@
 package com.ljr.factory.presenter.account;
 
-import android.accounts.Account;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
-import com.ljr.common.factory.BasePresenter;
+import com.ljr.common.factory.presenter.BasePresenter;
 
 import com.ljr.common.factory.data.DataSource;
 import com.ljr.factory.R;
 import com.ljr.factory.data.helper.AccountHelper;
-import com.ljr.factory.presenter.model.api.account.LoginModel;
-import com.ljr.factory.presenter.model.db.User;
+import com.ljr.factory.model.api.account.LoginModel;
+import com.ljr.factory.model.db.User;
+import com.ljr.factory.persistence.Account;
 
 import net.qiujuer.genius.kit.handler.Run;
 import net.qiujuer.genius.kit.handler.runable.Action;
@@ -37,9 +37,8 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
             view.showError(R.string.data_account_login_invalid_parameter);
         } else {
             // 尝试传递PushId
-            LoginModel model = new LoginModel(phone, password);
-            view.loginSuccess();
-            //AccountHelper.login(model, this);
+            LoginModel model = new LoginModel(phone, password, Account.getPushId());
+            AccountHelper.login(model, this);
         }
     }
 
