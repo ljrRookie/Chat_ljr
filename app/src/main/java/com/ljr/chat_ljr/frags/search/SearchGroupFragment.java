@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ljr.chat_ljr.R;
 import com.ljr.chat_ljr.activities.PersonalActivity;
 import com.ljr.chat_ljr.activities.SearchActitivy;
@@ -106,6 +107,7 @@ public class SearchGroupFragment extends PresenterFragment<SearchContract.Presen
 
         @Override
         protected void onBind(GroupCard groupCard) {
+            mPortraitView.setup(Glide.with(SearchGroupFragment.this), groupCard.getPicture());
             mName.setText(groupCard.getName());
             // 加入时间判断是否加入群
             mJoin.setEnabled(groupCard.getJoinAt() == null);

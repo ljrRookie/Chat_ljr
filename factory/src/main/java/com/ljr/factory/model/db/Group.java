@@ -1,7 +1,9 @@
 package com.ljr.factory.model.db;
 
+import com.ljr.factory.data.helper.GroupHelper;
 import com.ljr.factory.model.db.model.AppDatabase;
 import com.ljr.factory.model.db.model.BaseDbModel;
+import com.ljr.factory.model.db.view.MemberUserModel;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -149,7 +151,7 @@ public class Group extends BaseDbModel<Group> implements Serializable {
 
     private long groupMemberCount = -1;
 
-  /*  // 获取当前群的成员数量，使用内存缓存
+    // 获取当前群的成员数量，使用内存缓存
     public long getGroupMemberCount() {
         if (groupMemberCount == -1) {
             // -1 没有初始化
@@ -167,5 +169,5 @@ public class Group extends BaseDbModel<Group> implements Serializable {
         }
 
         return groupLatelyMembers;
-    }*/
+    }
 }

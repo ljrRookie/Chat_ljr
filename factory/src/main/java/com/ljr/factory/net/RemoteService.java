@@ -4,7 +4,10 @@ import com.ljr.factory.model.api.RspModel;
 import com.ljr.factory.model.api.account.AccountRspModel;
 import com.ljr.factory.model.api.account.LoginModel;
 import com.ljr.factory.model.api.account.RegisterModel;
+import com.ljr.factory.model.api.group.GroupCreateModel;
 import com.ljr.factory.model.api.user.UserUpdateModel;
+import com.ljr.factory.model.card.GroupCard;
+import com.ljr.factory.model.card.GroupMemberCard;
 import com.ljr.factory.model.card.UserCard;
 
 import java.util.List;
@@ -63,4 +66,19 @@ public interface RemoteService {
     // 查询某人的信息
     @GET("user/{userId}")
     Call<RspModel<UserCard>> userFind(@Path("userId") String userId);
-}
+
+    // 创建群
+    @POST("group")
+    Call<RspModel<GroupCard>> groupCreate(@Body GroupCreateModel model);
+
+    // 群搜索的接口
+    @GET("group/search/{name}")
+    Call<RspModel<List<GroupCard>>> groupSearch(@Path(value = "name", encoded = true) String name);
+
+    // 我的群的成员列表
+    @GET("group/{groupId}/member")
+    Call<RspModel<List<GroupMemberCard>>> groupMembers(@Path("groupId") String groupId);
+
+    // 我的群列表
+    @GET("group/list/{date}")
+    Call<RspModel<List<GroupCard>>> groups(@Path(value = "date", encoded = true) String date);}

@@ -13,6 +13,8 @@ import net.qiujuer.genius.kit.handler.runable.Action;
 
 import java.util.List;
 
+import retrofit2.Call;
+
 /**
  * Created by 林佳荣 on 2018/5/7.
  * Github：https://github.com/ljrRookie
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class SearchGroupPresenter extends BasePresenter<SearchContract.GroupView>
         implements SearchContract.Presenter,DataSource.Callback<List<GroupCard>> {
+    private Call searchCall;
 
 
     public SearchGroupPresenter(SearchContract.GroupView view) {
@@ -30,7 +33,13 @@ public class SearchGroupPresenter extends BasePresenter<SearchContract.GroupView
     @Override
     public void search(String content) {
         start();
-        GroupHelper.search(content,this);
+        Call call = searchCall;
+        if (call != null && !call.isCanceled()) {
+            // 如果有上一次的请求，并且没有取消，
+            // 则调用取消请求操作
+            call.cancel();
+        }
+        searchCall = GroupHelper.search(content, this);
     }
 
 

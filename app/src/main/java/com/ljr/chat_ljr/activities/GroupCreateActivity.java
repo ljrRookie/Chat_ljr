@@ -1,7 +1,10 @@
 package com.ljr.chat_ljr.activities;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,18 +20,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ljr.chat_ljr.R;
+import com.ljr.chat_ljr.frags.media.GalleryFragment;
 import com.ljr.common.app.BaseApplication;
 import com.ljr.common.app.PresenterToolbarActivity;
 import com.ljr.common.recycler.RecyclerAdapter;
 import com.ljr.common.widget.PortraitView;
 import com.ljr.factory.presenter.group.GroupCreateContract;
 import com.ljr.factory.presenter.group.GroupCreatePresenter;
+import com.yalantis.ucrop.UCrop;
 
 import net.qiujuer.genius.ui.widget.EditText;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Created by 林佳荣 on 2018/5/5.
@@ -51,10 +59,11 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
     private Adapter mAdapter;
-
+    private String mPortraitPath;
     public static void show(Context context) {
         context.startActivity(new Intent(context, GroupCreateActivity.class));
     }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_group_create;
@@ -80,6 +89,7 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         super.initData();
         mPresenter.start();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -95,13 +105,15 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         }
         return super.onOptionsItemSelected(item);
     }
+
     // 进行创建操作
     private void onCreateClick() {
         hideSoftKeyboard();
         String name = mEditName.getText().toString().trim();
         String desc = mEditDesc.getText().toString().trim();
-        mPresenter.create(name, desc, "");
+        mPresenter.create(name, desc, mPortraitPath);
     }
+
     @Override
     public RecyclerAdapter<GroupCreateContract.ViewModel> getRecyclerAdapter() {
         return mAdapter;
@@ -129,6 +141,61 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
     }
 
 
+
+    @OnClick(R.id.im_portrait)
+    public void onViewClicked() {
+        hideSoftKeyboard();
+        new GalleryFragment()
+                .setListener(new GalleryFragment.OnSelectedListener() {
+                    @Override
+                    public void onSelectedImage(String path) {
+                        UCrop.Options options = new UCrop.Options();
+                        // 设置图片处理的格式JPEG
+                        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+                        // 设置压缩后的图片精度
+                        options.setCompressionQuality(96);
+
+                        // 得到头像的缓存地址
+                        File dPath = BaseApplication.getPortraitTmpFile();
+
+                        // 发起剪切
+                        UCrop.of(Uri.fromFile(new File(path)), Uri.fromFile(dPath))
+                                .withAspectRatio(1, 1) // 1比1比例
+                                .withMaxResultSize(520, 520) // 返回最大的尺寸
+                                .withOptions(options) // 相关参数
+                                .start(GroupCreateActivity.this);
+                    }
+                }).show(getSupportFragmentManager(), GalleryFragment.class.getName());
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 收到从Activity传递过来的回调，然后取出其中的值进行图片加载
+        // 如果是我能够处理的类型
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            // 通过UCrop得到对应的Uri
+            final Uri resultUri = UCrop.getOutput(data);
+            if (resultUri != null) {
+                loadPortrait(resultUri);
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            BaseApplication.showToast(R.string.data_rsp_error_unknown);
+        }
+    }
+    /**
+     * 加载Uri到当前的头像中
+     *
+     * @param uri Uri
+     */
+    private void loadPortrait(Uri uri) {
+        // 得到头像地址
+        mPortraitPath = uri.getPath();
+
+        Glide.with(this)
+                .load(uri)
+                .asBitmap()
+                .centerCrop()
+                .into(mImPortrait);
+    }
     private class Adapter extends RecyclerAdapter<GroupCreateContract.ViewModel> {
 
         @Override
@@ -164,8 +231,8 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
 
         @Override
         protected void onBind(GroupCreateContract.ViewModel viewModel) {
-           // mPortrait.setup(Glide.with(GroupCreateActivity.this), viewModel.mAuthor);
-            mName.setText(viewModel.mAuthor.getName());
+             mPortrait.setup(Glide.with(GroupCreateActivity.this), viewModel.author);
+            mName.setText(viewModel.author.getName());
             mSelect.setChecked(viewModel.isSelected);
         }
     }

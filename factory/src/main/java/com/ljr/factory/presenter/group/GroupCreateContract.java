@@ -22,7 +22,7 @@ public interface GroupCreateContract {
     }
     class ViewModel{
         //用户信息
-        public Author mAuthor;
+        public Author author;
         //是否选中
         public boolean isSelected;
     }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                >
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -17,7 +18,7 @@
             android:layout_height="@dimen/actionBarWithStatusBarSize"
             android:background="@color/colorAccent"
             android:paddingTop="@dimen/statusBarSize"
-            app:titleTextAppearance="@style/TextAppearance.Title" />
+            app:titleTextAppearance="@style/TextAppearance.Title"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:layout_marginTop="@dimen/len_16"
                 android:src="@drawable/default_holder_add"
                 app:civ_border_color="@color/white"
-                app:civ_border_width="1dp" />
+                app:civ_border_width="1dp"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -60,7 +61,7 @@
                     app:gHintTitlePaddingBottom="@dimen/len_2"
                     app:gHintTitleTextSize="@dimen/font_12"
                     app:gLineColor="@color/white_alpha_240"
-                    app:gLineSize="1dp" />
+                    app:gLineSize="1dp"/>
 
                 <net.qiujuer.genius.ui.widget.EditText
                     android:id="@+id/edit_desc"
@@ -80,7 +81,7 @@
                     app:gHintTitlePaddingBottom="@dimen/len_2"
                     app:gHintTitleTextSize="@dimen/font_12"
                     app:gLineColor="@color/white_alpha_240"
-                    app:gLineSize="1dp" />
+                    app:gLineSize="1dp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -93,7 +94,7 @@
             android:layout_marginStart="@dimen/len_16"
             android:text="@string/label_group_member_select"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textColor="@color/white_alpha_208" />
+            android:textColor="@color/white_alpha_208"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -104,5 +105,5 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="@dimen/len_16"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>

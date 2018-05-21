@@ -5,9 +5,17 @@ import android.text.TextUtils;
 
 import com.ljr.common.factory.data.DataSource;
 import com.ljr.common.factory.presenter.BaseRecyclerPresenter;
+import com.ljr.factory.Factory;
 import com.ljr.factory.R;
+import com.ljr.factory.data.helper.GroupHelper;
+import com.ljr.factory.data.helper.UserHelper;
+import com.ljr.factory.model.api.group.GroupCreateModel;
 import com.ljr.factory.model.card.GroupCard;
 import com.ljr.factory.model.db.view.UserSampleModel;
+import com.ljr.factory.net.UploadHelper;
+
+import net.qiujuer.genius.kit.handler.Run;
+import net.qiujuer.genius.kit.handler.runable.Action;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,25 +35,31 @@ public class GroupCreatePresenter extends BaseRecyclerPresenter<GroupCreateContr
     public GroupCreatePresenter(GroupCreateContract.View view) {
         super(view);
     }
-
+    private Runnable loader = new Runnable() {
+        @Override
+        public void run() {
+            List<UserSampleModel> sampleModels = UserHelper.getSampleContact();
+            List<GroupCreateContract.ViewModel> models = new ArrayList<>();
+            for (UserSampleModel sampleModel : sampleModels) {
+                GroupCreateContract.ViewModel viewModel = new GroupCreateContract.ViewModel();
+                viewModel.author = sampleModel;
+                models.add(viewModel);
+            }
+            refreshData(models);
+        }
+    };
     @Override
     public void start() {
         super.start();
-        loadData();
+        // 加载
+        Factory.runOnAsync(loader);
+
     }
 
-    private void loadData() {
-        List<GroupCreateContract.ViewModel> models = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            GroupCreateContract.ViewModel viewModel = new GroupCreateContract.ViewModel();
-            viewModel.mAuthor = new UserSampleModel(i + "", "测试好友" + i, "");
-            models.add(viewModel);
-        }
-        refreshData(models);
-    }
+
 
     @Override
-    public void create(String name, String desc, String picture) {
+    public void create(final String name, final String desc, final String picture) {
         GroupCreateContract.View view = getView();
         view.showLoading();
 
@@ -54,28 +68,72 @@ public class GroupCreatePresenter extends BaseRecyclerPresenter<GroupCreateContr
                 TextUtils.isEmpty(picture) || users.size() == 0) {
             view.showError(R.string.label_group_create_invalid);
             return;
-        } else {
-            view.onCreateSucceed();
         }
+        // 上传图片
+        Factory.runOnAsync(new Runnable() {
+            @Override
+            public void run() {
+                String url = uploadPicture(picture);
+                if (TextUtils.isEmpty(url))
+                    return;
+                // 进行网络请求
+                GroupCreateModel model = new GroupCreateModel(name, desc, url, users);
+                GroupHelper.create(model, GroupCreatePresenter.this);
+            }
+        });
 
     }
-
+    // 同步上传操作
+    private String uploadPicture(String path) {
+        String url = UploadHelper.uploadPortrait(path);
+        if (TextUtils.isEmpty(url)) {
+            // 切换到UI线程 提示信息
+            Run.onUiAsync(new Action() {
+                @Override
+                public void call() {
+                    GroupCreateContract.View view = getView();
+                    if (view != null) {
+                        view.showError(R.string.data_upload_error);
+                    }
+                }
+            });
+        }
+        return url;
+    }
     @Override
     public void changeSelect(GroupCreateContract.ViewModel model, boolean isSelected) {
         if (isSelected)
-            users.add(model.mAuthor.getId());
+            users.add(model.author.getId());
         else
-            users.remove(model.mAuthor.getId());
+            users.remove(model.author.getId());
 
     }
 
     @Override
     public void onDataLoaded(GroupCard groupCard) {
-
+        // 成功
+        Run.onUiAsync(new Action() {
+            @Override
+            public void call() {
+                GroupCreateContract.View view = getView();
+                if (view != null) {
+                    view.onCreateSucceed();
+                }
+            }
+        });
     }
 
     @Override
-    public void onDataNotAvailable(@StringRes int strRes) {
-
+    public void onDataNotAvailable(@StringRes final int strRes) {
+        // 失败情况
+        Run.onUiAsync(new Action() {
+            @Override
+            public void call() {
+                GroupCreateContract.View view = getView();
+                if (view != null) {
+                    view.showError(strRes);
+                }
+            }
+        });
     }
 }
