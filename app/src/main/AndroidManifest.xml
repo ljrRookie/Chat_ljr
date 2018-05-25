@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ljr.chat_ljr">
+
     <!-- 网络相关的权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <!-- 读取存储权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <!-- 写存储权限，OSS需要 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- 录音权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
         android:name=".application.App"
         android:allowBackup="true"
@@ -26,45 +28,50 @@
             android:name=".activities.LaunchActivity"
             android:theme="@style/AppTheme.TransStatusBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.Main">
-
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Main">
         </activity>
         <activity
             android:name=".activities.AccountActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Account" >
-
+            android:theme="@style/AppTheme.Account">
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activities.UserActivity"
             android:label="@string/title_activity_user"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Account" />
-        <activity android:name=".activities.PersonalActivity"
-                  android:label="@string/title_activity_personal"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.TransStatusBar" />
+            android:theme="@style/AppTheme.Account"/>
+        <activity
+            android:name=".activities.PersonalActivity"
+            android:label="@string/title_activity_personal"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar"/>
         <activity
             android:name=".activities.GroupCreateActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Group.Create" />
+            android:theme="@style/AppTheme.Group.Create"/>
         <activity
             android:name=".activities.SearchActitivy"
             android:label="@string/title_search"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.TransStatusBar" />
-
+            android:theme="@style/AppTheme.TransStatusBar"/>
+        <activity
+            android:name=".activities.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Message"
+            android:windowSoftInputMode="adjustResize" />
         <!-- 个推的广播注册 -->
         <receiver
             android:name=".push.MessageReceiver"
@@ -72,9 +79,11 @@
             android:exported="true"
             android:permission="1000">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}" />
+                <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}"/>
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>

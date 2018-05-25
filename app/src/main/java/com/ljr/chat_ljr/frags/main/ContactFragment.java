@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ljr.chat_ljr.R;
+import com.ljr.chat_ljr.activities.MessageActivity;
 import com.ljr.chat_ljr.activities.PersonalActivity;
 import com.ljr.common.app.BaseApplication;
 import com.ljr.common.app.BaseFragment;
@@ -73,7 +74,7 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
             @Override
             public void onItemClick(RecyclerAdapter.ViewHolder holder, User user) {
                 // 跳转到聊天界面
-              //  MessageActivity.show(getContext(), user);
+                MessageActivity.show(getContext(), user);
             }
         });
         // 初始化占位布局

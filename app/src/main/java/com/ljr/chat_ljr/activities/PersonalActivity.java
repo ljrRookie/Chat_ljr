@@ -165,6 +165,10 @@ public class PersonalActivity extends PresenterToolbarActivity<PersonalContract.
 
     @OnClick(R.id.btn_say_hello)
     public void onViewClicked() {
-
+        // 发起聊天的点击
+        User user = mPresenter.getUserPersonal();
+        if (user == null)
+            return;
+        MessageActivity.show(this, user);
     }
 }

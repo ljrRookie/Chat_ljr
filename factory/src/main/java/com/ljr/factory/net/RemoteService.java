@@ -5,9 +5,11 @@ import com.ljr.factory.model.api.account.AccountRspModel;
 import com.ljr.factory.model.api.account.LoginModel;
 import com.ljr.factory.model.api.account.RegisterModel;
 import com.ljr.factory.model.api.group.GroupCreateModel;
+import com.ljr.factory.model.api.message.MsgCreateModel;
 import com.ljr.factory.model.api.user.UserUpdateModel;
 import com.ljr.factory.model.card.GroupCard;
 import com.ljr.factory.model.card.GroupMemberCard;
+import com.ljr.factory.model.card.MessageCard;
 import com.ljr.factory.model.card.UserCard;
 
 import java.util.List;
@@ -81,4 +83,9 @@ public interface RemoteService {
 
     // 我的群列表
     @GET("group/list/{date}")
-    Call<RspModel<List<GroupCard>>> groups(@Path(value = "date", encoded = true) String date);}
+    Call<RspModel<List<GroupCard>>> groups(@Path(value = "date", encoded = true) String date);
+
+    // 发送消息的接口
+    @POST("msg")
+    Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+}

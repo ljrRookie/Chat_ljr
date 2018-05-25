@@ -1,6 +1,7 @@
 package com.ljr.factory.model.db;
 
 import com.ljr.factory.model.db.model.AppDatabase;
+import com.ljr.factory.model.db.model.BaseDbModel;
 import com.ljr.factory.persistence.Account;
 import com.ljr.factory.utils.DiffUiDataCallback;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -22,7 +23,7 @@ import java.util.Objects;
  * @version 1.0.0
  */
 @Table(database = AppDatabase.class)
-public class Message extends BaseModel implements DiffUiDataCallback.UiDataDiffer<Message>, Serializable {
+public class Message extends BaseDbModel<Message> implements  Serializable {
     // 接收者类型
     public static final int RECEIVER_TYPE_NONE = 1;
     public static final int RECEIVER_TYPE_GROUP = 2;

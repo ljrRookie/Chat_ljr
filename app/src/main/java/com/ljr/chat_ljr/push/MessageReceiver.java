@@ -29,18 +29,21 @@ public class MessageReceiver extends BroadcastReceiver {
         //判断当前消息的意图
         switch (bundle.getInt(PushConsts.CMD_ACTION)) {
             case PushConsts.GET_CLIENTID: {
-                Log.i(TAG, "GET_CLIENTID:" + bundle.toString());
+               // Log.i(TAG, "GET_CLIENTID:" + bundle.toString());
+                Log.e(TAG, "当Id初始化的时候，获取设备Id" );
                 // 当Id初始化的时候
                 // 获取设备Id
                 onClientInit(bundle.getString("clientid"));
                 break;
             }
             case PushConsts.GET_MSG_DATA: {
+
                 // 常规消息送达
                 byte[] payload = bundle.getByteArray("payload");
                 if (payload != null) {
                     String message = new String(payload);
-                    Log.e(TAG, "GET_MSG_DATA:" + message);
+                  //  Log.e(TAG, "GET_MSG_DATA:" + message);
+                    Log.e(TAG, "常规消息送达 :"+message );
                     onMessageArrived(message);
                 }
                 break;
