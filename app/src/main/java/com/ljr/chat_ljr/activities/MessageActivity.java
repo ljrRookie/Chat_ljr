@@ -86,7 +86,7 @@ public class MessageActivity extends BaseActivity {
               fragment = new ChatGroupFragment();
         }else {
             fragment = new ChatUserFragment();
-         //   fragment = new ChatGroupFragment();
+
         }
         // 从Activity传递参数到Fragment中去
         Bundle bundle = new Bundle();

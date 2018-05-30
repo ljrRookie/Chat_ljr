@@ -92,6 +92,24 @@ public class MsgCreateModel {
         this.attach = card.getAttach();
     }
 
+    public static MsgCreateModel buildWithMessage(Message message) {
+        MsgCreateModel model = new MsgCreateModel();
+        model.id = message.getId();
+        model.content = message.getContent();
+        model.type = message.getType();
+        model.attach = message.getAttach();
+
+        if (message.getReceiver() != null) {
+            // 如果接收者不为null，则是给人发送消息
+            model.receiverId = message.getReceiver().getId();
+            model.receiverType = Message.RECEIVER_TYPE_NONE;
+        } else {
+            model.receiverId = message.getGroup().getId();
+            model.receiverType = Message.RECEIVER_TYPE_GROUP;
+        }
+        return model;
+    }
+
     /**
      * 建造者模式，快速的建立一个发送Model
      */

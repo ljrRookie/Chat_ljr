@@ -128,6 +128,7 @@ public abstract class ChatFragment<InitModel>
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -176,6 +177,8 @@ public abstract class ChatFragment<InitModel>
     @Override
     public void onAdapterDataChanged() {
         // 界面没有占位布局，Recycler是一直显示的，所有不需要做任何事情
+        mRecyclerView.scrollToPosition(mAdapter.getItems().size()-1);
+
     }
 
     @Override
@@ -336,11 +339,11 @@ public abstract class ChatFragment<InitModel>
         @OnClick(R.id.im_portrait)
         void onRePushClick() {
             // 重新发送
-           /* if (mLoading != null && mPresenter.rePush(mData)) {
+            if (mLoading != null && mPresenter.rePush(mData)) {
                 // 必须是右边的才有可能需要重新发送
                 // 状态改变需要重新刷新界面当前的信息
                 updateData(mData);
-            }*/
+            }
 
         }
     }

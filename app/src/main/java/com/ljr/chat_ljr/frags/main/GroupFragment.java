@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ljr.chat_ljr.R;
+import com.ljr.chat_ljr.activities.MessageActivity;
 import com.ljr.common.app.BaseFragment;
 import com.ljr.common.app.PresenterFragment;
 import com.ljr.common.recycler.RecyclerAdapter;
@@ -64,7 +65,7 @@ public class GroupFragment extends PresenterFragment<GroupsContract.Presenter> i
             @Override
             public void onItemClick(RecyclerAdapter.ViewHolder holder, Group group) {
                 // 跳转到聊天界面
-              //  MessageActivity.show(getContext(), group);
+               MessageActivity.show(getContext(), group);
             }
         });
         // 初始化占位布局

@@ -6,6 +6,7 @@ import com.ljr.factory.data.helper.GroupHelper;
 import com.ljr.factory.data.helper.MessageHelper;
 import com.ljr.factory.data.helper.UserHelper;
 import com.ljr.factory.model.db.model.AppDatabase;
+import com.ljr.factory.model.db.model.BaseDbModel;
 import com.ljr.factory.utils.DiffUiDataCallback;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -25,7 +26,7 @@ import java.util.Objects;
  * @version 1.0.0
  */
 @Table(database = AppDatabase.class)
-public class Session extends BaseModel implements DiffUiDataCallback.UiDataDiffer<Session> {
+public class Session extends BaseDbModel<Session> {
     @PrimaryKey
     private String id; // Id, 是Message中的接收者User的Id或者群的Id
     @Column

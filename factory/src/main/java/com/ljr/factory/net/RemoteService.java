@@ -88,4 +88,9 @@ public interface RemoteService {
     // 发送消息的接口
     @POST("msg")
     Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+
+    // 拉取群信息
+    @GET("group/{groupId}")
+    Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
+
 }

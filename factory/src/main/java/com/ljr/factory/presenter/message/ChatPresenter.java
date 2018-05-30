@@ -7,6 +7,7 @@ import com.ljr.factory.data.message.MessageDataSource;
 import com.ljr.factory.data.message.MessageRepository;
 import com.ljr.factory.model.api.message.MsgCreateModel;
 import com.ljr.factory.model.db.Message;
+import com.ljr.factory.persistence.Account;
 import com.ljr.factory.presenter.BaseSourcePresenter;
 import com.ljr.factory.utils.DiffUiDataCallback;
 
@@ -72,6 +73,18 @@ public class ChatPresenter<View extends ChatContract.View>
 
     @Override
     public boolean rePush(Message message) {
+        // 确定消息是可重复发送的
+        if (Account.getUserId().equalsIgnoreCase(message.getSender().getId())
+                && message.getStatus() == Message.STATUS_FAILED) {
+
+            // 更改状态
+            message.setStatus(Message.STATUS_CREATED);
+            // 构建发送Model
+            MsgCreateModel model = MsgCreateModel.buildWithMessage(message);
+            MessageHelper.push(model);
+            return true;
+        }
+
         return false;
     }
 }

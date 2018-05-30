@@ -11,6 +11,7 @@ import com.ljr.factory.model.card.UserCard;
 import com.ljr.factory.model.db.Group;
 import com.ljr.factory.model.db.GroupMember;
 import com.ljr.factory.model.db.GroupMember_Table;
+import com.ljr.factory.model.db.Group_Table;
 import com.ljr.factory.model.db.User;
 import com.ljr.factory.model.db.User_Table;
 import com.ljr.factory.model.db.view.MemberUserModel;
@@ -63,11 +64,38 @@ public class GroupHelper {
     }
 
     public static Group find(String groupId) {
+        Group group = findFromLocal(groupId);
+        if (group == null)
+            group = findFormNet(groupId);
+        return group;
+    }
+
+    private static Group findFormNet(String groupId) {
+        RemoteService remoteService = NetWork.remote();
+        try {
+            Response<RspModel<GroupCard>> response = remoteService.groupFind(groupId).execute();
+            GroupCard card = response.body().getResult();
+            if (card != null) {
+                // 数据库的存储并通知
+                Factory.getGroupCenter().dispatch(card);
+
+                User user = UserHelper.search(card.getOwnerId());
+                if (user != null) {
+                    return card.build(user);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     public static Group findFromLocal(String groupId) {
-        return null;
+        return SQLite.select()
+                .from(Group.class)
+                .where(Group_Table.id.eq(groupId))
+                .querySingle();
     }
 
     //群的创建
@@ -104,8 +132,8 @@ public class GroupHelper {
     }
     // 关联查询一个用户和群成员的表，返回一个MemberUserModel表的集合
     public static List<MemberUserModel> getMemberUsers(String groupId, int size) {
-        return SQLite.select(GroupMember_Table.alias.withTable().as("alias"),
-                User_Table.id.withTable().as("userId"),
+        List<MemberUserModel> memberUserModels = SQLite.select(GroupMember_Table.alias.withTable().as("alias"),
+                User_Table.id.withTable().as("UserId"),
                 User_Table.name.withTable().as("name"),
                 User_Table.portrait.withTable().as("portrait"))
                 .from(GroupMember.class)
@@ -115,6 +143,7 @@ public class GroupHelper {
                 .orderBy(GroupMember_Table.user_id, true)
                 .limit(size)
                 .queryCustomList(MemberUserModel.class);
+        return memberUserModels;
     }
     // 从网络去刷新一个群的成员信息
     public static void refreshGroupMember(Group group) {
